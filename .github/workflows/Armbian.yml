@@ -1,0 +1,44 @@
+name: Armbian
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    name: Armbian
+    runs-on: ubuntu-latest
+    steps:
+     - name: 编译开始通知
+       run: |
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨主人✨，您的Armbian镜像开始编译啦！" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
+     - name: 编译镜像
+       id: compile
+       run: |
+        git clone -b dev https://github.com/yunsur/phicomm-n1.git /opt/phicomm-n1
+        cd /opt/phicomm-n1
+        sudo ./compile.sh BOARD=arm-64 BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,img
+
+     - name: 打包镜像
+       run: |
+        xz -9ezvT0 /opt/phicomm-n1/output/images/*.img
+
+     - name: 上传镜像
+       uses: actions/upload-artifact@main
+       with:
+         name: Armbian image
+         path: /opt/phicomm-n1/output/images/
+
+     - name: 上传镜像至release
+       uses: softprops/action-gh-release@v1
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         tag_name: $(date +"%Y.%m.%d-%H%M")
+         files: |
+           /opt/phicomm-n1/output/images/*.xz
+           /opt/phicomm-n1/output/images/*.sha
+
+     - name: 编译成功通知
+       run: |
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨主人✨，您的Armbian镜像顺利编译完成啦！💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
