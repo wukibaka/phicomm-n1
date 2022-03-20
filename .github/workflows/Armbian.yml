@@ -27,17 +27,35 @@ jobs:
        uses: actions/upload-artifact@main
        with:
          name: Armbian image
-         path: /opt/phicomm-n1/output/images/
+         path: /opt/phicomm-n1/output/images/*
+
+     - name: 创建release tag
+       run: |
+        sudo timedatectl set-timezone Asia/Shanghai
+        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
 
      - name: 上传镜像至release
        uses: softprops/action-gh-release@v1
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
-         tag_name: $(date +"%Y.%m.%d-%H%M")
+         tag_name: ${{ steps.tag.outputs.release_tag }}
          files: |
-           /opt/phicomm-n1/output/images/*.xz
-           /opt/phicomm-n1/output/images/*.sha
+           /opt/phicomm-n1/output/images/*
+
+     - name: 删除老旧构建
+       uses: GitRML/delete-workflow-runs@main
+       with: 
+         retain_days: 1
+         keep_minimum_runs: 3
+
+     - name: 删除老旧release
+       uses: dev-drprasad/delete-older-releases@v0.1.0
+       with: 
+         keep_latest: 3
+         delete_tags: true
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 编译成功通知
        run: |
