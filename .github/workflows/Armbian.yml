@@ -13,7 +13,6 @@ jobs:
         curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨主人✨，您的Armbian镜像开始编译啦！" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
      - name: 编译镜像
-       id: compile
        run: |
         git clone -b dev https://github.com/yunsur/phicomm-n1.git /opt/phicomm-n1
         cd /opt/phicomm-n1
@@ -30,6 +29,7 @@ jobs:
          path: /opt/phicomm-n1/output/images/*
 
      - name: 创建release tag
+       id: tag
        run: |
         sudo timedatectl set-timezone Asia/Shanghai
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
