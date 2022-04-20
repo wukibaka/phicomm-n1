@@ -14,19 +14,18 @@ jobs:
 
      - name: 编译镜像
        run: |
-        git clone -b dev https://github.com/yunsur/phicomm-n1.git /opt/phicomm-n1
-        cd /opt/phicomm-n1
+        git clone -b dev https://github.com/yunsur/phicomm-n1.git
         sudo ./compile.sh BOARD=arm-64 BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,img
 
      - name: 打包镜像
        run: |
-        xz -9ezvT0 /opt/phicomm-n1/output/images/*.img
+        xz -9ezvT0 output/images/*.img
 
      - name: 上传镜像
        uses: actions/upload-artifact@main
        with:
          name: Armbian image
-         path: /opt/phicomm-n1/output/images/*
+         path: output/images/*
 
      - name: 创建release tag
        id: tag
@@ -41,7 +40,7 @@ jobs:
        with:
          tag_name: ${{ steps.tag.outputs.release_tag }}
          files: |
-           /opt/phicomm-n1/output/images/*
+           output/images/*
 
      - name: 删除老旧构建
        uses: GitRML/delete-workflow-runs@main
