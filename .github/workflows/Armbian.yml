@@ -14,7 +14,6 @@ jobs:
 
      - name: 编译镜像
        run: |
-        git clone -b dev https://github.com/yunsur/phicomm-n1.git
         sudo ./compile.sh BOARD=arm-64 BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,img
 
      - name: 打包镜像
