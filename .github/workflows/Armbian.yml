@@ -26,7 +26,7 @@ jobs:
         xz -9ezvT0 output/images/*.img
 
      - name: 上传镜像
-       uses: actions/upload-artifact@main
+       uses: actions/upload-artifact@v3
        with:
          name: Armbian image
          path: output/images/*
@@ -53,7 +53,7 @@ jobs:
          keep_minimum_runs: 3
 
      - name: 删除老旧release
-       uses: dev-drprasad/delete-older-releases@v0.1.0
+       uses: dev-drprasad/delete-older-releases@v0.2.0
        with: 
          keep_latest: 3
          delete_tags: true
