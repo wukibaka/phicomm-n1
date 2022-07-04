@@ -14,6 +14,8 @@ jobs:
 
      - name: 检查
        uses: actions/checkout@v3
+       with:
+        ref: dev
 
      - name: 编译镜像
        run: |
