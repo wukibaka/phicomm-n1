@@ -23,7 +23,7 @@ jobs:
 
      - name: 打包镜像
        run: |
-        xz -9ezvT0 output/images/*.img
+        sudo xz -9ezT0 output/images/*.img
 
      - name: 上传镜像
        uses: actions/upload-artifact@v3
