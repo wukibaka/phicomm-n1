@@ -19,7 +19,7 @@ jobs:
 
      - name: 编译镜像
        run: |
-        sudo ./compile.sh BOARD=arm-64 BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,img
+        sudo ./compile.sh BOARD=arm-64 BRANCH=current RELEASE=jammy BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,img
 
      - name: 打包镜像
        run: |
