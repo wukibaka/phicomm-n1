@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Armbian
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
      - name: 编译开始通知
        run: |
